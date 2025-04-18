@@ -1,11 +1,9 @@
 package desafio.cumbuca.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -13,17 +11,23 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Conta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "nome")
+    @NonNull
     private String nomeCompleto;
     @Column(unique = true)
+    @NonNull
     private String cpf;
+    @NonNull
     private String senha;
-    private String saldo;
+    @NonNull
+    private BigDecimal saldo;
+    @NonNull
     private LocalDate dataCriacao;
 
 }

@@ -17,19 +17,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     public static final String[] ENDPOINTS_WITH_NO_AUTHENTICATION = {
-            // colocar endpoints que nao necessitam autenticação
+            "/conta/criar",
+            "/conta/login",
+            "/swagger-ui/**",
+            "/swagger-ui/index.html",
+            "/api-docs/**",
+            "/favicon.ico"
     };
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION = {
             // colocar endpoints que necessitam estar autenticado
     };
 
+    // TODO consertar a UI do swagger
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION).authenticated()
                         .requestMatchers(ENDPOINTS_WITH_NO_AUTHENTICATION).permitAll()
-                        .anyRequest().denyAll())
+                        .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION).authenticated()
+                        .anyRequest().permitAll())
                 .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
