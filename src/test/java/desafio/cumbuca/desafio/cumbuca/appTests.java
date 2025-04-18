@@ -1,13 +1,13 @@
-package spring.desafio.cumbuca;
+package desafio.cumbuca.desafio.cumbuca;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DesafioCumbucaApplicationTests {
+class appTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
