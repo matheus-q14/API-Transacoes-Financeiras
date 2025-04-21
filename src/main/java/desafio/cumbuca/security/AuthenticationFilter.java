@@ -1,6 +1,5 @@
 package desafio.cumbuca.security;
 
-import desafio.cumbuca.app;
 import desafio.cumbuca.model.Conta;
 import desafio.cumbuca.model.ContaDetailsImpl;
 import desafio.cumbuca.repository.ContaRepository;
@@ -22,7 +21,7 @@ import java.util.Arrays;
 
 public class AuthenticationFilter extends OncePerRequestFilter {
 
-    private static final Logger Logger = LoggerFactory.getLogger(app.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
     @Autowired
     private ContaRepository contaRepository;
@@ -58,8 +57,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private boolean checkEndpointNotPublic(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        Logger.info("Debugando requestURI");
-        Logger.info(requestURI);
+        logger.info("Debugando requestURI");
+        logger.info(requestURI);
         return !Arrays.asList(SecurityConfiguration.ENDPOINTS_WITH_NO_AUTHENTICATION).contains(requestURI);
     }
 

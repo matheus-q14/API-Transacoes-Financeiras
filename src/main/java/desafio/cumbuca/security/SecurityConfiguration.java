@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,25 +20,27 @@ public class SecurityConfiguration {
     public static final String[] ENDPOINTS_WITH_NO_AUTHENTICATION = {
             "/conta/criar",
             "/conta/login",
-            "/swagger-ui/**",
-            "/swagger-ui/index.html",
-            "/api-docs/**",
             "/favicon.ico"
-    };
-    public static final String[] ENDPOINTS_WITH_AUTHENTICATION = {
-            // colocar endpoints que necessitam estar autenticado
     };
 
     // TODO consertar a UI do swagger
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        return httpSecurity.sessionManagement((session) -> session.
+                        sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(ENDPOINTS_WITH_NO_AUTHENTICATION).permitAll()
-                        .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION).authenticated()
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    // Ignorar as urls do swagger na autenticação
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(
+                "/swagger-ui/**", "/api-docs/**"
+        );
     }
 
     @Bean
