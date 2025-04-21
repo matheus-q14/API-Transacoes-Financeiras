@@ -32,6 +32,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (checkEndpointNotPublic(request)) {
+            logger.info("Recuperando token");
             String token = recoveryToken(request);
             if (token != null) {
                 String subject = jwtTokenService.getSubjectFromToken(token);
@@ -42,8 +43,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             } else {
                 throw new RuntimeException(String.format("%s Sem token de autenticação", request.getRequestURI()));
             }
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
 
     private String recoveryToken(HttpServletRequest request) {

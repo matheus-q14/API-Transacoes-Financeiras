@@ -3,7 +3,7 @@ package desafio.cumbuca.controller;
 import desafio.cumbuca.dtos.AutenticarContaDto;
 import desafio.cumbuca.dtos.CriarContaDto;
 import desafio.cumbuca.dtos.JwtTokenDto;
-import desafio.cumbuca.service.ContaServiceImpl;
+import desafio.cumbuca.service.ContaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,17 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContaController {
 
     @Autowired
-    private ContaServiceImpl contaService;
+    private ContaService contaService;
 
     @Operation(summary = "Criar uma nova conta",
             description = "Criar uma nova conta a partir do dto de criação de conta e salva no banco de dados")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "201", description = "Created"),
-                    @ApiResponse(responseCode = "400", description = "Bad request. Invalid data sent")
+                    // @ApiResponse(responseCode = "400", description = "Bad request. Invalid data sent")
             }
     )
-    @PostMapping(value = "/criar", consumes = "application/json")
+    @PostMapping(path = "/criar", consumes = "application/json")
     public ResponseEntity<?> criarConta(@RequestBody CriarContaDto criarContaDto) {
         contaService.criarConta(criarContaDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();

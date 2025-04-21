@@ -2,6 +2,7 @@ package desafio.cumbuca.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,17 +20,16 @@ public class SecurityConfiguration {
 
     public static final String[] ENDPOINTS_WITH_NO_AUTHENTICATION = {
             "/conta/criar",
-            "/conta/login",
-            "/favicon.ico"
+            "/conta/login"
     };
 
-    // TODO consertar a UI do swagger
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.sessionManagement((session) -> session.
+        return httpSecurity.csrf(csrf -> csrf.disable())
+                .sessionManagement((session) -> session.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(ENDPOINTS_WITH_NO_AUTHENTICATION).permitAll()
+                        .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_NO_AUTHENTICATION).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -39,7 +39,7 @@ public class SecurityConfiguration {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers(
-                "/swagger-ui/**", "/api-docs/**"
+                "/swagger-ui/**", "/api-docs/**", "/favicon.ico"
         );
     }
 

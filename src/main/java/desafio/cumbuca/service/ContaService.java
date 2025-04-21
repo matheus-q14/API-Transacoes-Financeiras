@@ -3,11 +3,11 @@ package desafio.cumbuca.service;
 import desafio.cumbuca.dtos.AutenticarContaDto;
 import desafio.cumbuca.dtos.CriarContaDto;
 import desafio.cumbuca.dtos.JwtTokenDto;
+import desafio.cumbuca.exception.CreationErrorException;
 import desafio.cumbuca.model.Conta;
 import desafio.cumbuca.model.ContaDetailsImpl;
 import desafio.cumbuca.repository.ContaRepository;
 import desafio.cumbuca.security.SecurityConfiguration;
-import desafio.cumbuca.service.interfaces.ContaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Service
-public class ContaServiceImpl implements ContaService {
+public class ContaService {
 
-    private Logger logger = LoggerFactory.getLogger(ContaServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(ContaService.class);
 
     @Autowired
     private ContaRepository contaRepository;
@@ -36,20 +36,22 @@ public class ContaServiceImpl implements ContaService {
     @Autowired
     private SecurityConfiguration securityConfiguration;
 
-    @Override
     public void criarConta(CriarContaDto criarContaDto) {
-        logger.info("Criando nova conta...");
-        Conta novaConta = new Conta(
-                criarContaDto.nomeCompleto(),
-                criarContaDto.cpf(),
-                securityConfiguration.passwordEncoder().encode(criarContaDto.senha()),
-                new BigDecimal(criarContaDto.saldo()),
-                LocalDate.now());
-        contaRepository.save(novaConta);
-        logger.info("Conta criada com sucesso");
+        try {
+            logger.info("Criando nova conta...");
+            Conta novaConta = new Conta(
+                    criarContaDto.nomeCompleto(),
+                    criarContaDto.cpf(),
+                    securityConfiguration.passwordEncoder().encode(criarContaDto.senha()),
+                    new BigDecimal(criarContaDto.saldo()),
+                    LocalDate.now());
+            contaRepository.save(novaConta);
+            logger.info("Conta criada com sucesso");
+        } catch (Exception e) {
+            throw new CreationErrorException("Erro ao criar uma nova conta, há informações faltando");
+        }
     }
 
-    @Override
     public JwtTokenDto autenticarConta(AutenticarContaDto autenticarContaDto) {
         // Objeto para autenticar com Spring Security
         logger.info("Iniciando autenticação");
