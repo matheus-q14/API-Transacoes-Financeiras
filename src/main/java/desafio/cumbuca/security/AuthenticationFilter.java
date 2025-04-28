@@ -43,7 +43,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 ContaDetailsImpl contaDetails = new ContaDetailsImpl(conta);
                 Authentication authentication = new UsernamePasswordAuthenticationToken(contaDetails, null, Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.info("User autenticado?: " + SecurityContextHolder.getContext().getAuthentication());
+                logger.info("User autenticado com sucesso");
             } else {
                 throw new RuntimeException(String.format("%s Sem token de autenticação", request.getRequestURI()));
             }

@@ -68,4 +68,24 @@ public class ContaService {
         logger.info("Usuário autenticado com sucesso");
         return new JwtTokenDto(jwtTokenService.generateToken(contaDetails));
     }
+
+    // verifica se há saldo para transação
+    public boolean temSaldoSuficiente(Conta contaADebitar, String valorString) {
+        BigDecimal valorADebitar = new BigDecimal(valorString);
+        return contaADebitar.getSaldo().subtract(valorADebitar).compareTo(new BigDecimal("0")) >= 0;
+    }
+
+    public void incrementarSaldo(Conta conta, String valorString) {
+        BigDecimal valorACreditar = new BigDecimal(valorString);
+        BigDecimal novoSaldo = conta.getSaldo().add(valorACreditar);
+        conta.setSaldo(novoSaldo);
+        contaRepository.save(conta);
+    }
+
+    public void diminuirSaldo(Conta conta, String valorString) {
+        BigDecimal valorADebitar = new BigDecimal(valorString);
+        BigDecimal novoSaldo = conta.getSaldo().subtract(valorADebitar);
+        conta.setSaldo(novoSaldo);
+        contaRepository.save(conta);
+    }
 }
