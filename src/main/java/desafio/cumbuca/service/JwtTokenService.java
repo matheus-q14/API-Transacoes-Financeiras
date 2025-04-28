@@ -19,7 +19,7 @@ public class JwtTokenService {
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenService.class);
 
     @Value("${jwt.secret.key}")
-    private static String SECRET_KEY = "O2%3w(p9YxvD903c&YSZqEKbit)UJ6P2Rg7yE#(q";
+    private String SECRET_KEY;
     private static final String ISSUER = "bancoX";
 
     public String generateToken(ContaDetailsImpl conta) {

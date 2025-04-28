@@ -29,5 +29,4 @@ public class Conta {
     private BigDecimal saldo;
     @NonNull
     private LocalDate dataCriacao;
-
 }

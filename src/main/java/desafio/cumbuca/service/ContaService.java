@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 
 @Service
 public class ContaService {
@@ -57,7 +58,8 @@ public class ContaService {
         logger.info("Iniciando autenticação");
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 autenticarContaDto.cpf(),
-                autenticarContaDto.senha()
+                autenticarContaDto.senha(),
+                Collections.emptyList()
         );
         // Autentica o usuario
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);

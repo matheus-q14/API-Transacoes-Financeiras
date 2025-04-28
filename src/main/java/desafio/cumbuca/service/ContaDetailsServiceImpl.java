@@ -20,4 +20,5 @@ public class ContaDetailsServiceImpl implements UserDetailsService {
         Conta conta = contaRepository.findByCpf(username).orElseThrow(() -> new RuntimeException("Conta não encontrada"));
         return new ContaDetailsImpl(conta);
     }
+
 }
