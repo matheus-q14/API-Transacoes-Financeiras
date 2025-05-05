@@ -3,6 +3,7 @@ package desafio.cumbuca.controller;
 import desafio.cumbuca.dtos.AutenticarContaDto;
 import desafio.cumbuca.dtos.CriarContaDto;
 import desafio.cumbuca.dtos.JwtTokenDto;
+import desafio.cumbuca.dtos.SaldoResponseDto;
 import desafio.cumbuca.service.ContaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,10 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/conta")
@@ -48,5 +46,13 @@ public class ContaController {
     public ResponseEntity<JwtTokenDto> fazerLogin(@RequestBody AutenticarContaDto autenticarContaDto) {
         JwtTokenDto jwtToken = contaService.autenticarConta(autenticarContaDto);
         return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
+    }
+
+    @Operation(summary = "Retorna o saldo",
+            description = "Retorna o saldo total do usuário logado"
+    )
+    @GetMapping("/saldo")
+    public ResponseEntity<SaldoResponseDto> consultarSaldo() {
+        return ResponseEntity.status(HttpStatus.OK).body(contaService.consultarSaldo());
     }
 }

@@ -1,7 +1,9 @@
 package desafio.cumbuca.service;
 
 import desafio.cumbuca.dtos.RealizarTransacaoRequestDto;
+import desafio.cumbuca.dtos.TransacaoPorDataRequestDto;
 import desafio.cumbuca.dtos.TransacaoRealizadaResponseDto;
+import desafio.cumbuca.dtos.TransacoesDataResponseDto;
 import desafio.cumbuca.exception.InsufficientBalanceException;
 import desafio.cumbuca.model.Conta;
 import desafio.cumbuca.model.ContaDetailsImpl;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TransacaoService {
@@ -55,5 +58,17 @@ public class TransacaoService {
         } else {
             throw new InsufficientBalanceException("Conta sem saldo o suficiente para transação");
         }
+    }
+
+    public List<TransacoesDataResponseDto> buscaPorData(TransacaoPorDataRequestDto requestDto) {
+        List<TransacoesDataResponseDto> listaTransacoes = transacaoRepositoy.
+                findAllByDataProcessamentoBetween(requestDto.dataInicial(), requestDto.dataFinal())
+                .stream().map(transacao -> new TransacoesDataResponseDto(
+                        transacao.getDataProcessamento(),
+                        transacao.getValor().toString(),
+                        transacao.getContaADebitar().getNomeCompleto(),
+                        transacao.getContaACreditar().getNomeCompleto()
+                )).toList();
+        return listaTransacoes;
     }
 }

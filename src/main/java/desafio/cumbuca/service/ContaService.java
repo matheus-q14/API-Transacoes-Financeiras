@@ -3,6 +3,7 @@ package desafio.cumbuca.service;
 import desafio.cumbuca.dtos.AutenticarContaDto;
 import desafio.cumbuca.dtos.CriarContaDto;
 import desafio.cumbuca.dtos.JwtTokenDto;
+import desafio.cumbuca.dtos.SaldoResponseDto;
 import desafio.cumbuca.exception.CreationErrorException;
 import desafio.cumbuca.model.Conta;
 import desafio.cumbuca.model.ContaDetailsImpl;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,7 +25,7 @@ import java.util.Collections;
 @Service
 public class ContaService {
 
-    private Logger logger = LoggerFactory.getLogger(ContaService.class);
+    private final Logger logger = LoggerFactory.getLogger(ContaService.class);
 
     @Autowired
     private ContaRepository contaRepository;
@@ -87,5 +89,11 @@ public class ContaService {
         BigDecimal novoSaldo = conta.getSaldo().subtract(valorADebitar);
         conta.setSaldo(novoSaldo);
         contaRepository.save(conta);
+    }
+
+    public SaldoResponseDto consultarSaldo() {
+        ContaDetailsImpl contaAutenticada = (ContaDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Conta conta = contaRepository.findByCpf(contaAutenticada.getUsername()).get();
+        return new SaldoResponseDto(conta.getNomeCompleto(), conta.getSaldo().toString());
     }
 }
